@@ -1,7 +1,7 @@
 /* Ginevra PAC: cache del solo codice pubblico, mai dei dati finanziari */
-const CACHE = 'ginevra-pac-shell-v1.4';
+const CACHE = 'ginevra-pac-shell-v1.5';
 const OFFLINE_FILES = [
-  './', './index.html', './manifest.webmanifest',
+  './', './index.html', './excel-export.js', './manifest.webmanifest',
   './icon-192.png', './icon-512.png',
   './apple-touch-icon.png', './favicon.png'
 ];

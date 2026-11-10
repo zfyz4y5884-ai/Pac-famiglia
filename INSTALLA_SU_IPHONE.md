@@ -1,4 +1,4 @@
-# PAC Famiglia 1.4: aggiornamento e installazione su iPhone
+# PAC Famiglia 1.5: aggiornamento e installazione su iPhone
 
 ## Novità
 - Crea persone diverse, come **Ginevra**, **Marco** e altri familiari.
@@ -26,3 +26,14 @@
 Le persone sono **sezioni dentro la tua app personale**, non account separati protetti da password. Tutti i dati sono salvati su un solo dispositivo/browser, e **non** vengono sincronizzati tra iPhone e iPad. Esporta un backup JSON periodico, specialmente prima degli aggiornamenti. Non pubblicare backup o dati di investimento su GitHub.
 
 Il prezzo automatico dell'ETF è basato su una fonte gratuita non ufficiale. Può essere ritardato o indisponibile; in alternativa inserisci un prezzo manuale. Gli acquisti Trade Republic non vengono verificati né eseguiti dall'app. Le modifiche alle rate vanno effettuate anche su Trade Republic.
+
+
+## Novità versione 1.5: report Excel
+
+Da **Opzioni → Esportazione e backup → Esporta Excel (.xlsx)** puoi ottenere un report con 6 fogli: Riepilogo, Portafogli, Piani PAC, Movimenti, Rendimenti e Variazioni PAC.
+
+L’Excel viene generato interamente sull’iPhone e non richiede una connessione Internet. Puoi aprirlo dall’app **File**, con **Numbers** o con **Microsoft Excel**. È un report alla data dell’esportazione, non si aggiorna da solo.
+
+**Conserva anche il backup JSON:** l’Excel serve alla consultazione, non per ripristinare i dati nell’app.
+
+Per aggiornare una versione già pubblicata, carica nella stessa cartella del repository tutti i file del nuovo ZIP (soprattutto `index.html`, `excel-export.js` e `sw.js`) e conferma il commit. Apri poi il sito in Safari e, se necessario, ricaricalo. I dati già presenti rimangono in `localStorage` finché non cambi indirizzo del sito o cancelli i dati di Safari. Esporta comunque prima un JSON per sicurezza.

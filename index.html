@@ -126,13 +126,14 @@
         <div class="row" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn" type="submit">Salva valore totale</button><button class="btn line" id="clear-valuation" type="button">Cancella valore</button></div>
         <p class="help">Usa questo campo quando non conosci tutte le quote acquistate. Se registri tutte le quote e il prezzo è disponibile, il calcolo dalle quote ha priorità sul valore totale manuale. Il rendimento è guadagno diviso totale versato, non un rendimento annualizzato.</p>
       </form>
-      <h2 class="section-title">Backup e privacy</h2><div class="panel stack"><p class="muted" style="margin:0">I dati vengono salvati esclusivamente su questo dispositivo, nel browser o nella web app. Non sono sincronizzati su altri dispositivi. Esporta un backup periodicamente: la pulizia dei dati di Safari può cancellarli.</p><div class="row" style="flex-wrap:wrap;justify-content:flex-start"><button class="btn alt" type="button" id="export-data">Esporta backup JSON</button><label class="btn line" for="import-file" style="cursor:pointer">Importa backup</label><input type="file" id="import-file" accept="application/json,.json" hidden></div><div class="line" style="margin:3px 0"></div><button class="btn line" id="calendar-file" type="button">Scarica promemoria del piano selezionato</button><div class="line" style="margin:3px 0"></div><button class="btn danger" type="button" id="erase">Cancella tutti i dati</button><div id="settings-feedback" aria-live="polite"></div></div>
-      <p class="footer">PAC Famiglia · v1.4 · Più persone e piani sullo stesso dispositivo. Offline dopo la prima apertura. Nessuna password di Trade Republic richiesta.</p>
+      <h2 class="section-title">Esportazione e backup</h2><div class="panel stack"><p class="muted" style="margin:0">I dati vengono salvati su questo dispositivo e non sono sincronizzati automaticamente. Esporta Excel per analizzare portafogli, piani, acquisti e rendimenti; usa invece il backup JSON per ripristinare l’app. I prezzi possono essere indicativi o non disponibili. Esporta periodicamente un backup: cancellando i dati del browser potresti perderli.</p><div class="row" style="flex-wrap:wrap;justify-content:flex-start"><button class="btn alt" type="button" id="export-data">Esporta backup JSON</button><button class="btn alt" type="button" id="export-excel">Esporta Excel (.xlsx)</button><label class="btn line" for="import-file" style="cursor:pointer">Importa backup</label><input type="file" id="import-file" accept="application/json,.json" hidden></div><p class="help">L’Excel è un resoconto alla data dell’esportazione e si apre in File, Numbers o Microsoft Excel. Non è un backup ripristinabile nell’app: per questo conserva il JSON.</p><div class="line" style="margin:3px 0"></div><button class="btn line" id="calendar-file" type="button">Scarica promemoria del piano selezionato</button><div class="line" style="margin:3px 0"></div><button class="btn danger" type="button" id="erase">Cancella tutti i dati</button><div id="settings-feedback" aria-live="polite"></div></div>
+      <p class="footer">PAC Famiglia · v1.5 · Più persone e piani sullo stesso dispositivo. Offline dopo la prima apertura. Nessuna password di Trade Republic richiesta.</p>
     </section>
   </main>
   <nav class="tabs" aria-label="Sezioni dell'app">
     <button class="tab" type="button" data-page="portfolios" aria-selected="true"><b>▦</b>Portafogli</button><button class="tab" type="button" data-page="home" aria-selected="false"><b>⌂</b>Piano</button><button class="tab" type="button" data-page="movements" aria-selected="false"><b>⇄</b>Movimenti</button><button class="tab" type="button" data-page="future" aria-selected="false"><b>◷</b>Futuro</button><button class="tab" type="button" data-page="settings" aria-selected="false"><b>⚙</b>Opzioni</button>
   </nav>
+  <script src="./excel-export.js"></script>
   <script>
 (()=>{'use strict';
  const KEY='pac-famiglia-v1',LEGACY_KEY='ginevra-pac-v1',$=id=>document.getElementById(id);
@@ -336,6 +337,91 @@
  $('rate').onchange=renderFuture;
  const download=(name,content,type)=>{let blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2500)};
  $('export-data').onclick=()=>download('pac-famiglia-backup-'+today()+'.json',JSON.stringify({version:3,exportedAt:new Date().toISOString(),data:store},null,2),'application/json');
+ 
+ // Esportazione Excel locale: nessun dato finanziario viene inviato a servizi esterni.
+ function exportExcel(){
+   if(!window.PacExcel||typeof window.PacExcel.build!=='function')throw Error('Componente Excel non disponibile. Aggiorna la pagina oppure reinstalla il pacchetto completo.');
+   const owners=Object.fromEntries(store.owners.map(o=>[o.id,o.name]));
+   const asMoney=n=>n===null||n===undefined||n===''?null:Number.isFinite(Number(n))?round2(n):null;
+   const snapshot=today();
+   const plans=[...store.plans].sort((a,b)=>(owners[a.ownerId]||'').localeCompare(owners[b.ownerId]||'')||a.name.localeCompare(b.name));
+   const planRows=[],returns=[],movements=[],amounts=[];
+   for(const p of plans){
+     const who=owners[p.ownerId]||'Persona';
+     const v=valuation(p), paidTotal=paid(null,p), units=missingUnits(p).length?null:holdings(p);
+     const quote=p.quote&&p.quote.currency==='EUR'&&p.quote.symbol===p.priceSymbol?Number(p.quote.price):null;
+     const date=v?.asOf?String(v.asOf).slice(0,10):null;
+     const status=!p.movements.length?'Nessun acquisto':!v?'Valore non disponibile':v.stale?'Quotazione non recente':v.mode==='manualPortfolio'?'Valore inserito manualmente':'Prezzo potenzialmente ritardato';
+     const planRow=planRows.length+2;
+     planRows.push([who,p.name,p.etfTicker,p.etfIsin||'',asMoney(paidTotal),v?asMoney(v.basis):null,v?asMoney(v.value):null,
+       v?{formula:`G${planRow}-F${planRow}`,value:asMoney(v.gain)}:null,
+       v&&v.basis>0?{formula:`IF(F${planRow}=0,\"\",H${planRow}/F${planRow})`,value:v.gain/v.basis}:null,
+       units,quote,date,p.priceSymbol||'',status]);
+     const returnRow=returns.length+2;
+     returns.push([who,p.name,p.etfTicker,date,v?.mode==='quote'?'Quote × prezzo':v?'Valore manuale':'Non disponibile',v?asMoney(v.value):null,v?asMoney(v.basis):null,
+       v?{formula:`F${returnRow}-G${returnRow}`,value:asMoney(v.gain)}:null,
+       v&&v.basis>0?{formula:`IF(G${returnRow}=0,\"\",H${returnRow}/G${returnRow})`,value:v.gain/v.basis}:null,
+       quote,units,status]);
+     const changes=Array.isArray(p.amountChanges)&&p.amountChanges.length?p.amountChanges:[{from:p.startMonth,amount:p.monthly}];
+     changes.forEach(ch=>amounts.push([who,p.name,p.etfTicker,ch.from,asMoney(ch.amount)]));
+     for(const m of p.movements){
+       const r=movements.length+2, unitsM=Number(m.units)>0?Number(m.units):null;
+       movements.push([who,p.name,p.etfTicker,m.date,m.month||'',asMoney(m.amount),unitsM,
+         unitsM?{formula:`IF(G${r}=0,\"\",F${r}/G${r})`,value:Number(m.amount)/unitsM}:null,
+         m.month?'Acquisto PAC':'Acquisto aggiuntivo']);
+     }
+   }
+   movements.sort((a,b)=>String(a[3]).localeCompare(String(b[3]))||String(a[0]).localeCompare(String(b[0])));
+   // Le formule di prezzo unitario devono seguire l'ordine delle righe dopo l'ordinamento.
+   movements.forEach((m,i)=>{if(m[7]&&m[6])m[7]={formula:`IF(G${i+2}=0,\"\",F${i+2}/G${i+2})`,value:m[5]/m[6]}});
+   const families=store.owners.map(o=>{
+     const ps=plans.filter(p=>p.ownerId===o.id);
+     const pa=ps.reduce((sum,p)=>sum+paid(null,p),0);
+     const complete=ps.every(p=>!p.movements.length||valuation(p));
+     const v=complete?ps.reduce((sum,p)=>sum+(valuation(p)?.value||0),0):null;
+     const basis=complete?ps.reduce((sum,p)=>sum+(valuation(p)?.basis||0),0):null;
+     const gaps=ps.filter(p=>p.movements.length&&!valuation(p)).length;
+     return [o.name,ps.length,asMoney(pa),complete?asMoney(basis):null,complete?asMoney(v):null,
+       complete?asMoney(v-basis):null,complete&&basis>0?(v-basis)/basis:null,gaps,complete?'Completo':'Dati parziali'];
+   });
+   const summary=[...families];
+   const allComplete=plans.every(p=>!p.movements.length||valuation(p));
+   const totalVersato=plans.reduce((sum,p)=>sum+paid(null,p),0);
+   const totalBasis=allComplete?plans.reduce((sum,p)=>sum+(valuation(p)?.basis||0),0):null;
+   const totalValue=allComplete?plans.reduce((sum,p)=>sum+(valuation(p)?.value||0),0):null;
+   summary.push(['TOTALE FAMIGLIA',plans.length,asMoney(totalVersato),asMoney(totalBasis),asMoney(totalValue),
+      allComplete?asMoney(totalValue-totalBasis):null,allComplete&&totalBasis>0?(totalValue-totalBasis)/totalBasis:null,
+      plans.filter(p=>p.movements.length&&!valuation(p)).length,allComplete?'Completo':'Dati parziali']);
+   const sheetList=[
+     {name:'Riepilogo',columns:[['Persona','text',23],['N. piani','integer',11],['Versato totale (€)','money',20],['Versato valorizzato (€)','money',23],['Valore (€)','money',18],['Risultato (€)','money',19],['Rendimento (%)','percent',19],['Piani senza valore','integer',18],['Stato dati','text',20]],rows:summary},
+     {name:'Portafogli',columns:[['Persona','text',20],['Piano','text',26],['ETF','text',12],['ISIN','text',21],['Versato totale (€)','money',20],['Versato valorizzato (€)','money',22],['Valore (€)','money',18],['Risultato (€)','money',18],['Rendimento (%)','percent',18],['Quote possedute','quantity',22],['Prezzo ETF (€)','money',19],['Data valore','date',16],['Mercato','text',18],['Stato valutazione','text',30]],rows:planRows},
+     {name:'Piani PAC',columns:[['Persona','text',20],['Piano','text',26],['ETF','text',13],['ISIN','text',21],['Mercato','text',18],['Rata configurata (€)','money',22],['Giorno mensile','integer',17],['Mese inizio','text',16],['Durata (anni)','integer',17],['Prezzo','text',15],['N. acquisti','integer',16],['Quote da integrare','integer',20]],rows:plans.map(p=>[owners[p.ownerId]||'Persona',p.name,p.etfTicker,p.etfIsin||'',p.priceSymbol||'',asMoney(p.monthly),p.day,p.startMonth,p.horizonYears,p.quoteMode==='manual'?'Manuale':'Automatico',p.movements.length,missingUnits(p).length])},
+     {name:'Movimenti',columns:[['Persona','text',20],['Piano','text',26],['ETF','text',12],['Data acquisto','date',18],['Mese PAC','text',15],['Investito (€)','money',20],['Quote acquistate','quantity',24],['Prezzo acquisto (€)','money',23],['Tipo movimento','text',24]],rows:movements},
+     {name:'Rendimenti',columns:[['Persona','text',20],['Piano','text',26],['ETF','text',12],['Data valore','date',17],['Metodo','text',22],['Valore (€)','money',18],['Versato alla data (€)','money',23],['Risultato (€)','money',19],['Rendimento (%)','percent',20],['Prezzo ETF (€)','money',19],['Quote','quantity',21],['Stato valutazione','text',30]],rows:returns},
+     {name:'Variazioni PAC',columns:[['Persona','text',20],['Piano','text',26],['ETF','text',13],['Dal mese','text',16],['Rata (€)','money',18]],rows:amounts}
+   ];
+   return window.PacExcel.build(sheetList);
+ }
+ $('export-excel').onclick=async()=>{try{
+   const blob=exportExcel(),name='pac-famiglia-report-'+today()+'.xlsx';
+   // Su iPhone/iPad usa il pannello di condivisione per scegliere «Salva su File».
+   if(typeof File!=='undefined'&&typeof navigator.share==='function'&&typeof navigator.canShare==='function'){
+     const file=new File([blob],name,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+     if(navigator.canShare({files:[file]})){
+       try{
+         await navigator.share({files:[file],title:'PAC Famiglia - Report Excel'});
+         setFeedback('Report Excel condiviso. Puoi aprirlo da File, Numbers o Excel. Il backup di ripristino resta il JSON.');
+         return;
+       }catch(err){
+         if(err.name==='AbortError'){setFeedback('Esportazione annullata. Tocca di nuovo «Esporta Excel» e scegli «Salva su File».');return}
+         // Se il pannello nativo non funziona, prova il download standard.
+       }
+     }
+   }
+   download(name,blob,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+   setFeedback('Excel creato. Cercalo in Download nell’app File (oppure apri il sito in Safari se il download non parte dalla web app).');
+ }catch(err){console.error(err);setFeedback('Esportazione non riuscita: '+(err.message||'errore sconosciuto'),false)}};
+
  $('import-file').onchange=async e=>{let file=e.target.files[0];if(!file)return;try{
     if(file.size>5000000)throw Error('File troppo grande.');
     const obj=JSON.parse(await file.text()),d=obj.data;

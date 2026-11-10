@@ -1,7 +1,4 @@
-PAC FAMIGLIA 1.4 - APP PER IPHONE E IPAD
-
-Versione con più persone e più piani di accumulo.
-Apri INSTALLA_SU_IPHONE.md. Carica tutti i file sullo STESSO repository GitHub Pages se stai aggiornando Ginevra PAC.
-Prima di aggiornare esporta il backup dalla vecchia app.
-
-Le persone sono etichette virtuali, non conti bancari distinti. I dati restano locali sul dispositivo.
+PAC Famiglia 1.5 per iPhone e iPad: supporto report Excel (.xlsx) offline, backup JSON e piu persone/piani.
+Carica tutti i file nella cartella principale del repository GitHub Pages.
+Il file excel-export.js e essenziale: non va rinominato o omesso.
+Prima di aggiornare esporta il backup JSON.
