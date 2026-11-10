@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#132a2b">
+  <meta name="description" content="Monitora i PAC di tutta la famiglia: persone, ETF, acquisti e rendimenti separati.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PAC Famiglia">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <title>PAC Famiglia</title>
+  <style>
+    :root{--ink:#132a2b;--sub:#66787a;--cream:#f7f7f2;--paper:#fff;--mint:#c6ede1;--teal:#176e61;--border:#e6ecea;--rose:#f7d8d0;--danger:#b6403b;--radius:20px;--shadow:0 8px 30px rgba(19,42,43,.045);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink)}body{padding:0 env(safe-area-inset-right) calc(96px + env(safe-area-inset-bottom)) env(safe-area-inset-left)}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #80bdaf;outline-offset:2px}
+    .wrap{width:min(760px,100%);margin:auto;padding:25px 18px 16px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.14em;font-weight:800;color:var(--teal)}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}header h1{font-size:29px;line-height:1.1;letter-spacing:-1.1px;margin:6px 0 0}.brand-icon{width:50px;height:50px;border-radius:16px;background:var(--ink);display:grid;place-items:center;color:var(--mint);font-size:26px}
+    .hero{background:linear-gradient(135deg,#173c39 0%,#102a2b 80%);border-radius:26px;padding:27px 24px;color:#fff;position:relative;overflow:hidden}.hero:after{content:'✳';position:absolute;font-size:210px;line-height:1;color:rgba(198,237,225,.08);right:-22px;top:-50px;pointer-events:none}.hero .eyebrow{color:#bae9d9}.hero .amount{font-size:clamp(34px,7vw,50px);font-weight:800;letter-spacing:-1.5px;margin:14px 0 6px;font-variant-numeric:tabular-nums}.hero small{color:#b8d2ce}.hero .secondary{display:flex;flex-wrap:wrap;gap:22px;margin-top:28px}.hero .secondary strong{font-size:20px;display:block;margin-top:5px}.hero .secondary span{font-size:12px;color:#b8d2ce}.hero .status{font-size:12px;margin-top:12px;color:#d1e8e0}.hero .status strong{color:white}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px}.section-title{font-size:19px;letter-spacing:-.45px;margin:26px 0 13px}.panel{background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}.muted{color:var(--sub);font-size:13px;line-height:1.45}.pill{background:#e1f2ea;color:#16604f;padding:7px 10px;border-radius:100px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px}.pill.warn{background:#fff1d8;color:#825800}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mini{padding:17px}.mini strong{display:block;margin-top:5px;font-size:21px;letter-spacing:-.5px}.mini .muted{font-size:12px}.btn{border:0;background:var(--ink);color:white;padding:13px 15px;border-radius:13px;font-weight:700;min-height:44px}.btn.alt{background:#e9f4f0;color:#155849}.btn.line{background:transparent;color:var(--ink);border:1px solid #cddcd7}.btn.danger{background:#fff0ec;color:var(--danger)}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.small{font-size:12px;padding:8px 12px;min-height:36px}.stack{display:grid;gap:12px}.due{border-left:4px solid #e1b85b;padding-left:15px}.line{height:1px;background:var(--border);margin:16px 0}.big-number{font-size:25px;font-weight:800}.val-positive{color:#147a55}.val-negative{color:var(--danger)}.list-line{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--border)}.list-line:first-child{border-top:0}.list-line strong{font-size:15px}.list-line .muted{margin-top:3px}.tag{font-size:11px;background:#f0f4f3;border-radius:7px;padding:4px 7px}
+    .chart{width:100%;height:auto;display:block}.chart .area{fill:rgba(28,131,104,.1)}.chart .stroke{fill:none;stroke:#237f67;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.chart .gridline{stroke:#e8eeeb;stroke-width:1}.legend{display:flex;gap:10px;justify-content:space-between;color:var(--sub);font-size:11px;margin-top:5px}.hidden{display:none!important}.input-row{display:flex;flex-direction:column;gap:6px}.field{background:#fafbf9;border:1px solid #dbe4e0;border-radius:12px;padding:12px;min-height:47px;width:100%;color:var(--ink)}label{font-size:13px;font-weight:700}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.formgrid .span2{grid-column:1/-1}.help{font-size:12px;line-height:1.45;color:var(--sub);margin:7px 0 0}.notice{background:#eff6f2;border-radius:14px;padding:14px;font-size:13px;color:#345d50;line-height:1.5}.notice.warn{background:#fff6e6;color:#755a24}.counter{font-size:12px;color:var(--sub);margin:0 0 8px}.chip{display:inline-flex;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:700;background:#f2f5f3;color:#46685e}
+    .tabs{position:fixed;z-index:5;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);border-top:1px solid var(--border);padding:9px max(18px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));display:flex;justify-content:center;gap:4px;backdrop-filter:blur(10px)}.tab{border:0;background:transparent;padding:9px 14px;min-width:82px;color:#7a8b88;border-radius:12px;font-size:12px;font-weight:800}.tab b{display:block;font-size:20px;margin-bottom:2px;font-weight:400}.tab[aria-selected=true]{color:#0d5848;background:#e4f3ed}h2,h3{margin:0}h3{font-size:16px}.page{animation:fade .16s ease}@keyframes fade{from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}.error{color:var(--danger);font-size:13px;margin-top:8px}.success{color:#146c4c;font-size:13px;margin-top:8px}.futurerow{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}.futurerow:last-child{border:0}.futurerow small{display:block;color:var(--sub)}.smalltitle{font-size:14px;font-weight:800;margin:0 0 12px}.linkish{color:var(--teal);font-weight:700;text-decoration:underline;text-underline-offset:2px;border:0;background:none;padding:4px 0}.footer{margin:25px 4px 0;font-size:11px;line-height:1.5;color:#738680}.empty{text-align:center;padding:32px 12px;color:var(--sub);font-size:13px}
+    @media(max-width:420px){.wrap{padding-left:14px;padding-right:14px}.hero{padding:23px 20px}.panel{padding:16px}.tab{min-width:72px;padding:9px 9px}.formgrid{grid-template-columns:1fr}.formgrid .span2{grid-column:auto}}
+    .install-card{border:1px solid #cce1d9;background:#eaf5f0;border-radius:18px;margin:0 0 19px;padding:16px 17px}
+    .install-card h2{font-size:16px;margin:0 0 7px;color:#114f42}
+    .install-card p{font-size:13px;line-height:1.55;color:#235849;margin:0 0 10px}
+    .install-card small{font-size:11px;color:#527a6d}
+    .install-card button{background:#d0e9df;color:#145346;border:0;border-radius:10px;padding:8px 10px;font-weight:700}
+    .owner-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 12px}
+    .plan-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:10px}
+    .plan-card.current{border-color:#66b69f;background:#f5fbf8}
+    .plan-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .value-note{font-size:11px;color:var(--sub);margin-top:2px}
+    .compact{margin:5px 0}
+    .tab{min-width:0;flex:1;padding:8px 4px;font-size:11px}
+    .tab b{font-size:19px}
+    @media(max-width:420px){.tab{min-width:0;padding:8px 1px;font-size:10px}}
+    .family-hero{background:linear-gradient(135deg,#173c39,#102a2b);color:#fff;border-radius:24px;padding:22px}
+    .family-hero .eyebrow{color:#bae9d9}
+    .family-hero .amount{font-size:clamp(30px,7vw,42px);font-weight:800;margin:10px 0}
+    .family-hero p{color:#c6dfd7;font-size:12px;line-height:1.5;margin:7px 0}
+    .active-name{color:#66787a;font-size:12px;margin-top:5px}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header><div><div class="eyebrow">I tuoi piani, separati</div><h1>PAC Famiglia <span aria-hidden="true">✦</span></h1><div class="active-name">Piano selezionato: <strong id="active-label">Ginevra · PAC VWCE</strong></div></div><div class="brand-icon" aria-hidden="true">✦</div></header>
+    <aside id="install-card" class="install-card" hidden>
+      <div class="row" style="margin-bottom:7px"><h2>📲 Aggiungi PAC Famiglia all’iPhone</h2><button type="button" id="install-dismiss">Chiudi</button></div>
+      <p>Apri questo sito in <strong>Safari</strong>, tocca <strong>Condividi</strong> → <strong>Aggiungi alla schermata Home</strong>, attiva <strong>Apri come app</strong> e tocca <strong>Aggiungi</strong>.</p>
+      <small>La prima apertura deve avvenire online. I tuoi dati restano sul dispositivo, non su GitHub.</small>
+    </aside>
+    <section id="page-portfolios" class="page">
+      <h2 class="section-title" style="margin-top:6px">Tutti i portafogli</h2>
+      <div class="family-hero"><div class="eyebrow">Patrimonio familiare monitorato</div><div class="amount" id="family-value">0,00 €</div><p id="family-caption">Valore dei piani disponibili</p><div class="row"><span>Versamenti confermati</span><strong id="family-paid">0,00 €</strong></div><div class="row" style="margin-top:8px"><span>Risultato stimato</span><strong id="family-gain">Non disponibile</strong></div></div>
+      <div class="notice" style="margin-top:12px">Le persone e i piani qui sotto sono <strong>sezioni virtuali</strong>, non conti bancari o accessi differenti. Ogni piano mantiene ETF, rata, movimenti, rendimento e proiezione propri.</div>
+      <h2 class="section-title">Persone e piani</h2><div id="owners-list" class="stack"></div>
+      <h2 class="section-title">Aggiungi una persona</h2><form class="panel stack" id="owner-form"><div class="input-row"><label for="owner-name">Nome della persona</label><input class="field" id="owner-name" maxlength="50" placeholder="Es. Marco" required autocomplete="off"></div><button class="btn alt" type="submit">Aggiungi persona</button></form>
+      <h2 class="section-title">Crea un nuovo piano</h2><form class="panel formgrid" id="create-plan-form">
+        <div class="input-row"><label for="plan-owner">Persona</label><select class="field" id="plan-owner" required></select></div>
+        <div class="input-row"><label for="plan-name">Nome del piano</label><input class="field" id="plan-name" maxlength="50" placeholder="Es. PAC VUAA" required></div>
+        <div class="input-row"><label for="plan-ticker">Ticker ETF</label><input class="field" id="plan-ticker" placeholder="VUAA" maxlength="16" required autocapitalize="characters"></div>
+        <div class="input-row"><label for="plan-isin">ISIN (facoltativo)</label><input class="field" id="plan-isin" placeholder="IE00BFMXXD54" maxlength="12" autocapitalize="characters"></div>
+        <div class="input-row span2"><label for="plan-symbol">Simbolo quotazione in EUR</label><input class="field" id="plan-symbol" placeholder="VUAA.MI" maxlength="24" required><p class="help">Deve corrispondere all'ETF e alla Borsa scelta. Puoi modificarlo dopo.</p></div>
+        <div class="input-row"><label for="plan-monthly">Rata mensile (€)</label><input class="field" id="plan-monthly" type="number" min="1" max="100000000" step="0.01" inputmode="decimal" value="100" required></div>
+        <div class="input-row"><label for="plan-day">Giorno del mese</label><select class="field" id="plan-day"></select></div>
+        <div class="input-row"><label for="plan-start">Mese iniziale</label><input class="field" id="plan-start" type="month" required></div>
+        <div class="input-row"><label for="plan-horizon">Orizzonte (anni)</label><input class="field" id="plan-horizon" type="number" min="1" max="50" step="1" value="18" required></div>
+        <div class="span2"><button class="btn" type="submit">Crea piano separato</button></div>
+      </form>
+    </section>
+    <section id="page-home" class="page hidden">
+      <div class="hero"><div class="eyebrow">Patrimonio dedicato · <span id="hero-etf">VWCE</span></div><div class="amount" id="hero-value">0,00 €</div><small id="hero-caption">Totale versato, in attesa della prima valutazione</small><div class="secondary"><div><span>Versamenti confermati</span><strong id="hero-paid">0,00 €</strong></div><div><span>Rendimento</span><strong id="hero-gain">Da calcolare</strong></div></div><div class="status" id="hero-status"></div></div>
+      <h2 class="section-title">Quotazione ETF</h2><div class="panel" id="quote-home"></div>
+      <h2 class="section-title">Il prossimo versamento</h2><div class="panel stack" id="next-card"></div>
+      <h2 class="section-title">Andamento</h2><div class="panel"><div class="row"><div><h3>Capitale versato</h3><p class="help">Solo movimenti confermati, mai quelli previsti.</p></div><span class="chip" id="chart-number">0 movimenti</span></div><svg id="chart" class="chart" viewBox="0 0 600 210" role="img" aria-label="Grafico del capitale versato nel tempo"></svg><div class="legend"><span id="chart-start">Inizio</span><span id="chart-end">Oggi</span></div></div>
+      <div class="two" style="margin-top:12px"><div class="panel mini"><div class="muted">Prossima rata</div><strong id="summary-monthly">100 €</strong></div><div class="panel mini"><div class="muted">Quote registrate</div><strong id="summary-units">0</strong></div></div>
+      <div class="footer">Quest'app registra e organizza i tuoi dati. Non esegue ordini su Trade Republic e non verifica i pagamenti bancari.</div>
+    </section>
+    <section id="page-movements" class="page hidden">
+      <h2 class="section-title">Versamenti da verificare</h2><div id="pending-list" class="stack"></div>
+      <h2 class="section-title" id="tx-form-title">Registra un acquisto</h2>
+      <form class="panel formgrid" id="add-form">
+        <input type="hidden" id="tx-id"><input type="hidden" id="tx-linked-month">
+        <div class="input-row"><label for="tx-date">Data effettiva dell'acquisto</label><input class="field" required type="date" id="tx-date"></div>
+        <div class="input-row"><label for="tx-amount">Importo investito (€)</label><input class="field" required type="number" min="0.01" step="0.01" id="tx-amount" inputmode="decimal"></div>
+        <div class="input-row span2"><label for="tx-units">Quote dell'ETF comprate (anche frazionarie)</label><input class="field" type="number" min="0.00000001" step="any" id="tx-units" inputmode="decimal" placeholder="Es. 0,593475"><p class="help" id="tx-hint">Copia le quote effettive da Trade Republic. Senza di esse puoi comunque registrare il versamento, ma il rendimento automatico non è calcolabile.</p></div>
+        <div class="span2 row" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn" id="tx-submit" type="submit">Salva acquisto confermato</button><button class="btn line hidden" id="cancel-edit" type="button">Annulla modifica</button></div>
+      </form>
+      <h2 class="section-title">Storico acquisti</h2><div class="panel" id="history"></div>
+    </section>
+    <section id="page-future" class="page hidden">
+      <h2 class="section-title" id="future-title">Obiettivo del piano</h2><div class="panel stack"><div><div class="eyebrow">Simulazione indicativa</div><div class="big-number" id="future-total">0,00 €</div><p class="help" id="future-help"></p></div><div class="input-row"><label for="rate">Rendimento annuo ipotetico</label><select class="field" id="rate"><option value="0">0%</option><option value="3">3%</option><option value="5" selected>5%</option><option value="7">7%</option></select></div><div class="notice warn">I rendimenti sono solo scenari matematici, non previsioni o garanzie. Non includono imposte e inflazione. I mercati possono perdere valore.</div></div>
+      <h2 class="section-title">Proiezione per tappe</h2><div class="panel" id="milestones"></div>
+    </section>
+    <section id="page-settings" class="page hidden">
+      <h2 class="section-title" id="etf-settings-title">ETF del piano selezionato</h2>
+      <form id="etf-form" class="panel formgrid">
+        <div class="input-row"><label for="etf-ticker">Ticker dell'ETF</label><input class="field" id="etf-ticker" maxlength="16" placeholder="VWCE" autocomplete="off" required></div>
+        <div class="input-row"><label for="etf-isin">Codice ISIN</label><input class="field" id="etf-isin" maxlength="12" placeholder="IE00BK5BQT80" autocomplete="off"></div>
+        <div class="input-row span2"><label for="price-symbol">Simbolo del listino in euro (per la quotazione)</label><input class="field" id="price-symbol" maxlength="24" placeholder="VWCE.MI" autocomplete="off" required><p class="help">Per VWCE su Borsa Italiana è VWCE.MI. Il simbolo può cambiare a seconda del listino.</p></div>
+        <div class="span2"><button type="submit" class="btn">Salva ETF</button></div>
+      </form>
+      <h2 class="section-title">Piano di accumulo</h2>
+      <form id="settings-form" class="panel formgrid">
+        <div class="input-row"><label for="setting-monthly">Nuova rata mensile (€)</label><input class="field" id="setting-monthly" type="number" min="1" max="100000000" step="0.01" inputmode="decimal" required></div>
+        <div class="input-row"><label for="setting-effective">Applica la nuova rata da</label><input class="field" type="month" id="setting-effective" required></div>
+        <div class="input-row"><label for="setting-day">Giorno di esecuzione</label><select class="field" id="setting-day"></select></div>
+        <div class="input-row"><label for="setting-start">Mese iniziale del PAC</label><input class="field" id="setting-start" type="month" required></div>
+        <div class="input-row"><label for="setting-horizon">Durata della simulazione (anni)</label><input class="field" id="setting-horizon" type="number" min="1" max="50" required></div>
+        <div class="span2"><button class="btn" type="submit">Salva importo e piano</button><p class="help">Puoi aumentare o diminuire la rata quando vuoi. Le modifiche non alterano gli importi già versati e valgono dal mese scelto. Modifica anche il PAC nell'app Trade Republic: qui cambia solo il monitoraggio.</p></div>
+      </form>
+      <div class="panel" style="margin-top:10px"><h3>Storico variazioni della rata</h3><div id="monthly-history"></div></div>
+      <h2 class="section-title">Prezzo automatico dell'ETF</h2>
+      <div class="panel stack">
+        <div class="notice">L’app prova a leggere una quotazione in euro per il simbolo selezionato. Fonte Yahoo Finance tramite proxy cors.dev: gratuita, non ufficiale e potenzialmente ritardata. Se è indisponibile usa il prezzo manuale. Non inserire credenziali Trade Republic.</div>
+        <div class="input-row"><label for="quote-mode">Modalità quotazione</label><select class="field" id="quote-mode"><option value="auto">Automatica quando apro l'app</option><option value="manual">Manuale</option></select></div>
+        <p class="help" id="price-summary"></p><div class="row" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn alt" id="refresh-quote" type="button">Aggiorna prezzo adesso</button></div><p class="help" aria-live="polite" id="quote-feedback"></p>
+      </div>
+      <h2 class="section-title">Prezzo per quota: inserimento manuale</h2>
+      <form class="panel formgrid" id="manual-price-form"><div class="input-row"><label for="manual-price">Prezzo di 1 quota (€)</label><input class="field" id="manual-price" type="number" min="0.0001" step="any" inputmode="decimal" placeholder="Es. 168,20"></div><div class="input-row"><label for="manual-price-date">Data del prezzo</label><input class="field" id="manual-price-date" type="date"></div><div class="span2"><button class="btn line" type="submit">Usa prezzo manuale</button></div></form>
+      <h2 class="section-title">Valore totale: alternativa manuale</h2>
+      <form id="valuation-form" class="panel stack">
+        <div class="input-row"><label for="market-value">Valore totale della posizione su Trade Republic (€)</label><input class="field" id="market-value" type="number" min="0" step="0.01" placeholder="Es. 1260,40" inputmode="decimal"></div>
+        <div class="input-row"><label for="market-date">Data del valore</label><input class="field" id="market-date" type="date" required></div>
+        <div class="row" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn" type="submit">Salva valore totale</button><button class="btn line" id="clear-valuation" type="button">Cancella valore</button></div>
+        <p class="help">Usa questo campo quando non conosci tutte le quote acquistate. Se registri tutte le quote e il prezzo è disponibile, il calcolo dalle quote ha priorità sul valore totale manuale. Il rendimento è guadagno diviso totale versato, non un rendimento annualizzato.</p>
+      </form>
+      <h2 class="section-title">Backup e privacy</h2><div class="panel stack"><p class="muted" style="margin:0">I dati vengono salvati esclusivamente su questo dispositivo, nel browser o nella web app. Non sono sincronizzati su altri dispositivi. Esporta un backup periodicamente: la pulizia dei dati di Safari può cancellarli.</p><div class="row" style="flex-wrap:wrap;justify-content:flex-start"><button class="btn alt" type="button" id="export-data">Esporta backup JSON</button><label class="btn line" for="import-file" style="cursor:pointer">Importa backup</label><input type="file" id="import-file" accept="application/json,.json" hidden></div><div class="line" style="margin:3px 0"></div><button class="btn line" id="calendar-file" type="button">Scarica promemoria del piano selezionato</button><div class="line" style="margin:3px 0"></div><button class="btn danger" type="button" id="erase">Cancella tutti i dati</button><div id="settings-feedback" aria-live="polite"></div></div>
+      <p class="footer">PAC Famiglia · v1.4 · Più persone e piani sullo stesso dispositivo. Offline dopo la prima apertura. Nessuna password di Trade Republic richiesta.</p>
+    </section>
+  </main>
+  <nav class="tabs" aria-label="Sezioni dell'app">
+    <button class="tab" type="button" data-page="portfolios" aria-selected="true"><b>▦</b>Portafogli</button><button class="tab" type="button" data-page="home" aria-selected="false"><b>⌂</b>Piano</button><button class="tab" type="button" data-page="movements" aria-selected="false"><b>⇄</b>Movimenti</button><button class="tab" type="button" data-page="future" aria-selected="false"><b>◷</b>Futuro</button><button class="tab" type="button" data-page="settings" aria-selected="false"><b>⚙</b>Opzioni</button>
+  </nav>
+  <script>
+(()=>{'use strict';
+ const KEY='pac-famiglia-v1',LEGACY_KEY='ginevra-pac-v1',$=id=>document.getElementById(id);
+ const isoDate=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+ const today=()=>isoDate(new Date());
+ const fmtDate=v=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(v||''))return v||'';return new Date(v+'T12:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'})};
+ const fmtDateTime=v=>{let d=new Date(v);return Number.isFinite(d.getTime())?d.toLocaleString('it-IT',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'sconosciuta'};
+ const euro=v=>new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(Number(v)||0);
+ const nfmt=(v,max=8)=>new Intl.NumberFormat('it-IT',{maximumFractionDigits:max}).format(Number(v)||0);
+ const pct=v=>(v>0?'+':'')+new Intl.NumberFormat('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2}).format(v)+'%';
+ const clean=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const uid=()=>String(Date.now())+Math.random().toString(36).slice(2,10);
+ const validMoney=n=>Number.isFinite(Number(n))&&Number(n)>0&&Number(n)<=1e8;
+ const validDate=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||'')&&isoDate(new Date(s+'T12:00:00'))===s;
+ const validMonth=s=>/^\d{4}-(0[1-9]|1[0-2])$/.test(s||'');
+ const round2=n=>Math.round(Number(n)*100)/100;
+ const monthsBetween=(a,b)=>{let[ay,am]=a.split('-').map(Number),[by,bm]=b.split('-').map(Number);return (by-ay)*12+(bm-am)};
+ const nextMonth=(m,n)=>{let[y,mo]=m.split('-').map(Number),d=new Date(y,mo-1+n,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`};
+ const firstMonth=()=>{let d=new Date();if(d.getDate()>16)d.setMonth(d.getMonth()+1);return isoDate(d).slice(0,7)};
+ const defaults=()=>({monthly:100,day:16,startMonth:firstMonth(),horizonYears:18,etfTicker:'VWCE',etfIsin:'IE00BK5BQT80',priceSymbol:'VWCE.MI',quoteMode:'auto',quote:null,amountChanges:[],movements:[],skipped:[],valuation:null});
+ const newPlan=(ownerId,name,etfTicker='VWCE',etfIsin='IE00BK5BQT80',priceSymbol='VWCE.MI',monthly=100,day=16,startMonth=firstMonth(),horizonYears=18)=>({...defaults(),id:uid(),ownerId,name,etfTicker,etfIsin,priceSymbol,monthly,day,startMonth,horizonYears,amountChanges:[{from:startMonth,amount:monthly}]});
+ const firstStore=(legacy=null)=>{const ownerId='persona-ginevra';return {version:3,owners:[{id:ownerId,name:'Ginevra'}],plans:[legacy?{...defaults(),...legacy,id:'piano-ginevra-iniziale',ownerId,name:'PAC VWCE'}:newPlan(ownerId,'PAC VWCE')],activePlanId:legacy?'piano-ginevra-iniziale':null}};
+ let store=null,state=null,quoteFeedback='';
+ try{let parsed=JSON.parse(localStorage.getItem(KEY));if(parsed&&Array.isArray(parsed.owners)&&Array.isArray(parsed.plans))store=parsed}catch(e){console.warn('Archivio multi-piano non leggibile',e)}
+ if(!store){let legacy=null;try{let raw=JSON.parse(localStorage.getItem(LEGACY_KEY));if(raw&&Array.isArray(raw.movements)&&validMoney(raw.monthly))legacy=raw}catch(e){}store=firstStore(legacy)}
+ function normalisePlan(){
+   if(!validMoney(state.monthly))state.monthly=100;
+   if(!(state.day>=1&&state.day<=28))state.day=16;
+   if(!validMonth(state.startMonth))state.startMonth=firstMonth();
+   if(!Number.isInteger(Number(state.horizonYears))||Number(state.horizonYears)<1||Number(state.horizonYears)>50)state.horizonYears=18;
+   state.horizonYears=Number(state.horizonYears);
+   state.name=String(state.name||'PAC '+(state.etfTicker||'ETF')).trim().slice(0,50);
+   if(!Array.isArray(state.movements))state.movements=[];
+   if(!Array.isArray(state.skipped))state.skipped=[];
+   state.movements=state.movements.filter(x=>x&&validDate(x.date)&&validMoney(x.amount))
+      .map(x=>({id:String(x.id||uid()).replace(/[^\w-]/g,'').slice(0,80)||uid(),date:x.date,amount:round2(x.amount),month:validMonth(x.month)?x.month:null,units:validMoney(x.units)?Number(x.units):null}));
+   state.skipped=state.skipped.filter(validMonth);
+   if(!Array.isArray(state.amountChanges)||!state.amountChanges.length)state.amountChanges=[{from:state.startMonth,amount:state.monthly}];
+   else state.amountChanges=state.amountChanges.filter(x=>x&&validMonth(x.from)&&validMoney(x.amount)).map(x=>({from:x.from,amount:round2(x.amount)}));
+   if(!state.amountChanges.length)state.amountChanges=[{from:state.startMonth,amount:state.monthly}];
+   state.amountChanges.sort((a,b)=>a.from.localeCompare(b.from));
+   if(!/^[A-Z0-9.-]{1,16}$/.test(state.etfTicker||''))state.etfTicker='VWCE';
+   if(!/^[A-Z0-9.^-]{1,24}$/.test(state.priceSymbol||''))state.priceSymbol=state.etfTicker==='VWCE'?'VWCE.MI':state.etfTicker;
+   if(state.quoteMode!=='manual')state.quoteMode='auto';
+   if(state.quote&&(!(Number(state.quote.price)>0)||!Number.isFinite(Number(state.quote.price))||state.quote.currency!=='EUR'||state.quote.symbol!==state.priceSymbol))state.quote=null;
+   if(state.valuation&&(!Number.isFinite(Number(state.valuation.amount))||Number(state.valuation.amount)<0||!validDate(state.valuation.date)))state.valuation=null;
+ }
+ function normalise(){
+   if(!Array.isArray(store.owners))store.owners=[];
+   store.owners=store.owners.filter(o=>o&&typeof o.id==='string'&&o.id.length&&typeof o.name==='string'&&o.name.trim()).slice(0,100).map(o=>({id:o.id.slice(0,80),name:o.name.trim().slice(0,50)}));
+   if(!store.owners.length)store.owners=[{id:'persona-ginevra',name:'Ginevra'}];
+   if(!Array.isArray(store.plans))store.plans=[];
+   store.plans=store.plans.filter(p=>p&&typeof p==='object').slice(0,100);
+   if(!store.plans.length)store.plans=[newPlan(store.owners[0].id,'PAC VWCE')];
+   const validOwners=new Set(store.owners.map(o=>o.id));
+   for(const plan of store.plans){
+     if(!plan.id||typeof plan.id!=='string')plan.id=uid();
+     if(!validOwners.has(plan.ownerId))plan.ownerId=store.owners[0].id;
+     state=plan;normalisePlan();
+   }
+   if(!store.plans.some(p=>p.id===store.activePlanId))store.activePlanId=store.plans[0].id;
+   state=store.plans.find(p=>p.id===store.activePlanId);
+   store.version=3;
+ }
+ normalise();
+ try{localStorage.setItem(KEY,JSON.stringify(store))}catch(err){console.warn('Salvataggio iniziale non riuscito',err)}
+ const amountAt=month=>{let value=state.amountChanges[0]?.amount||state.monthly;for(const ch of state.amountChanges)if(ch.from<=month)value=ch.amount;return value};
+ const plannedDate=month=>month+'-'+String(state.day).padStart(2,'0');
+ const covered=month=>state.skipped.includes(month)||state.movements.some(m=>m.month===month);
+ function dueMonths(){let end=today().slice(0,7),count=monthsBetween(state.startMonth,end),list=[];for(let i=0;i<=Math.min(count,600);i++){let month=nextMonth(state.startMonth,i),date=plannedDate(month);if(date>today()||covered(month))continue;list.push({month,date,amount:amountAt(month)})}return list}
+ function nextDue(){let pending=dueMonths();if(pending.length)return {...pending[0],pending:true};let offset=Math.max(0,monthsBetween(state.startMonth,today().slice(0,7)));for(let i=offset;i<offset+36;i++){let month=nextMonth(state.startMonth,i),date=plannedDate(month);if(date<=today()||covered(month))continue;return {month,date,amount:amountAt(month),pending:false}}return null}
+ const paid=(asOf,plan=state)=>plan.movements.reduce((s,x)=>s+(!asOf||x.date<=asOf?Number(x.amount):0),0);
+ const holdings=(plan=state)=>plan.movements.reduce((s,x)=>s+(Number(x.units)||0),0);
+ const missingUnits=(plan=state)=>plan.movements.filter(x=>!(Number(x.units)>0));
+ function valuation(plan=state){
+   let q=plan.quote,tx=plan.movements;
+   if(tx.length&&missingUnits(plan).length===0&&q?.currency==='EUR'&&q.symbol===plan.priceSymbol&&Number(q.price)>0){let value=holdings(plan)*Number(q.price);return {value,asOf:q.at||null,mode:'quote',basis:paid(null,plan),gain:value-paid(null,plan),stale:(Date.now()-new Date(q.at||0).getTime())>7*86400000}}
+   let v=plan.valuation;if(v&&validDate(v.date)&&v.date<=today()){const basis=paid(v.date,plan);return {value:Number(v.amount),asOf:v.date,mode:'manualPortfolio',basis,gain:Number(v.amount)-basis}}
+   return null;
+ }
+ function save(){localStorage.setItem(KEY,JSON.stringify(store));render()}
+ const ownerOf=plan=>store.owners.find(o=>o.id===plan.ownerId);
+ function switchPlan(id){let plan=store.plans.find(p=>p.id===id);if(!plan)return;store.activePlanId=id;state=plan;quoteFeedback='';clearTxForm();save();show('home');if(state.quoteMode==='auto')refreshQuote()}
+ function renderPortfolios(){
+   const totalPaid=store.plans.reduce((s,p)=>s+paid(null,p),0);
+   const priced=store.plans.filter(p=>!p.movements.length||valuation(p));
+   const allValued=priced.length===store.plans.length;
+   const totalValue=store.plans.reduce((s,p)=>s+(valuation(p)?.value??0),0);
+   $('family-paid').textContent=euro(totalPaid);$('family-gain').textContent=allValued?(totalValue-totalPaid>=0?'+':'')+euro(totalValue-totalPaid):'Non disponibile';
+   $('family-value').textContent=allValued?euro(totalValue):'Da completare';
+   $('family-caption').textContent=allValued?'Somma dei valori di tutti i piani; prezzi indicativi, talvolta ritardati.':`${priced.length} di ${store.plans.length} piani con valutazione disponibile. Inserisci quote e prezzi o valore manuale per completare.`;
+   $('active-label').textContent=`${ownerOf(state)?.name||'Persona'} · ${state.name}`;
+   const select=$('plan-owner'),previous=select.value;
+   select.innerHTML=store.owners.map(o=>`<option value="${clean(o.id)}">${clean(o.name)}</option>`).join('');
+   if(store.owners.some(o=>o.id===previous))select.value=previous;
+   $('owners-list').innerHTML=store.owners.map(o=>{
+     const plans=store.plans.filter(p=>p.ownerId===o.id);
+     const invested=plans.reduce((s,p)=>s+paid(null,p),0);
+     const complete=plans.every(p=>!p.movements.length||valuation(p));
+     const value=plans.reduce((s,p)=>s+(valuation(p)?.value||0),0);
+     return `<div class="panel"><div class="owner-header"><div><div class="eyebrow">Persona</div><h3 style="font-size:20px;margin-top:5px">${clean(o.name)}</h3><div class="muted">${plans.length} ${plans.length===1?'piano':'piani'} · ${euro(invested)} versati</div></div><div style="text-align:right"><strong>${complete?euro(value):'Valore da completare'}</strong><div class="value-note">${complete?'Valore stimato':'Quotazione mancante'}</div></div></div>
+     ${plans.map(p=>{const v=valuation(p),current=p.id===store.activePlanId;
+       return `<div class="plan-card ${current?'current':''}"><div class="row"><div><strong>${clean(p.name)}</strong> ${current?'<span class="chip">Selezionato</span>':''}<div class="muted compact">${clean(p.etfTicker)} · ${euro(p.monthly)} rata configurata · giorno ${p.day}</div></div><div style="text-align:right"><strong>${euro(v?.value??paid(null,p))}</strong><div class="value-note">${v?'Valore stimato · '+(v.gain>=0?'+':'')+euro(v.gain):'Solo versato'}</div></div></div><div class="plan-actions"><button type="button" class="btn small ${current?'alt':''}" data-open-plan="${clean(p.id)}">Apri</button><button type="button" class="btn small line" data-rename-plan="${clean(p.id)}">Rinomina</button><button type="button" class="btn small danger" data-delete-plan="${clean(p.id)}">Elimina</button></div></div>`}).join('')||'<div class="muted">Nessun piano: puoi crearne uno qui sotto.</div>'}
+     <div class="plan-actions"><button type="button" class="linkish" data-rename-owner="${clean(o.id)}">Rinomina persona</button>${plans.length?'':`<button type="button" class="linkish" data-delete-owner="${clean(o.id)}">Rimuovi persona</button>`}</div></div>`
+   }).join('');
+   document.querySelectorAll('[data-open-plan]').forEach(b=>b.onclick=()=>switchPlan(b.dataset.openPlan));
+   document.querySelectorAll('[data-rename-plan]').forEach(b=>b.onclick=()=>{let p=store.plans.find(x=>x.id===b.dataset.renamePlan);if(!p)return;let value=prompt('Nuovo nome del piano',p.name);if(value===null)return;value=value.trim();if(!value||value.length>50){alert('Nome non valido (1-50 caratteri).');return}p.name=value;save()});
+   document.querySelectorAll('[data-delete-plan]').forEach(b=>b.onclick=()=>{const p=store.plans.find(x=>x.id===b.dataset.deletePlan);if(!p)return;if(store.plans.length===1){alert('È necessario mantenere almeno un piano.');return}if(!confirm(`Eliminare definitivamente ${p.name} e TUTTI i suoi movimenti? Esporta prima un backup.`))return;store.plans=store.plans.filter(x=>x.id!==p.id);if(store.activePlanId===p.id){store.activePlanId=store.plans[0].id;state=store.plans[0];clearTxForm()}save()});
+   document.querySelectorAll('[data-rename-owner]').forEach(b=>b.onclick=()=>{let o=store.owners.find(x=>x.id===b.dataset.renameOwner);if(!o)return;let value=prompt('Nuovo nome della persona',o.name);if(value===null)return;value=value.trim();if(!value||value.length>50){alert('Nome non valido (1-50 caratteri).');return}o.name=value;save()});
+   document.querySelectorAll('[data-delete-owner]').forEach(b=>b.onclick=()=>{let id=b.dataset.deleteOwner;if(store.plans.some(p=>p.ownerId===id))return;if(!confirm('Rimuovere questa persona senza piani?'))return;store.owners=store.owners.filter(o=>o.id!==id);save()});
+ }
+ function alertErr(message){alert(message)}
+ function setFeedback(text,ok=true){$('settings-feedback').innerHTML=`<div class="${ok?'success':'error'}">${clean(text)}</div>`}
+ function addMovement(date,amount,units,month,id){
+   amount=Number(amount);units=units===''||units===null||units===undefined?null:Number(units);
+   if(!validDate(date)||date>today()||!validMoney(amount))throw Error('Indica una data valida non futura e un importo maggiore di zero.');
+   if(units!==null&&(!Number.isFinite(units)||units<=0||units>1e9))throw Error('Le quote devono essere un numero positivo, eventualmente frazionario.');
+   let existing=id?state.movements.find(x=>x.id===id):null;
+   if(id&&!existing)throw Error('Movimento non trovato.');
+   let linkedMonth=existing?existing.month:month||null;
+   if(!existing&&!linkedMonth){let m=date.slice(0,7);if(dueMonths().some(x=>x.month===m))linkedMonth=m}
+   if(linkedMonth&&state.movements.some(x=>x.month===linkedMonth&&x.id!==id))throw Error('Questa scadenza risulta già confermata. Modifica il movimento esistente.');
+   const row={id:existing?.id||uid(),date,amount:round2(amount),units,month:linkedMonth};
+   if(existing)Object.assign(existing,row);else state.movements.push(row);
+   state.movements.sort((a,b)=>a.date.localeCompare(b.date));
+   clearTxForm();save();show('movements');
+ }
+ function clearTxForm(){ $('tx-id').value='';$('tx-linked-month').value='';$('tx-date').value=today();$('tx-amount').value=amountAt(today().slice(0,7));$('tx-units').value='';$('tx-submit').textContent='Salva acquisto confermato';$('cancel-edit').classList.add('hidden');$('tx-form-title').textContent='Registra un acquisto';$('tx-hint').textContent='Inserisci le quote effettive indicate su Trade Republic per avere il valore automatico.'; }
+ function populateTx(item){$('tx-id').value=item.id||'';$('tx-linked-month').value=item.month||'';$('tx-date').value=item.date;$('tx-amount').value=item.amount;$('tx-units').value=item.units??'';$('tx-submit').textContent=item.id?'Salva modifiche':'Conferma acquisto';$('cancel-edit').classList.toggle('hidden',!item.id);$('tx-form-title').textContent=item.id?'Modifica acquisto':`Conferma PAC ${item.month||''}`;$('tx-hint').textContent='Copia il numero di quote (anche frazioni) dal dettaglio dell’ordine Trade Republic.';document.getElementById('add-form').scrollIntoView({behavior:'smooth',block:'start'})}
+ function renderHome(){const v=valuation(),invested=paid();$('hero-etf').textContent=state.etfTicker;
+   $('hero-value').textContent=euro(v?v.value:invested);
+   $('hero-caption').textContent=v?(v.mode==='quote'?`Valore stimato sulle quote · ${fmtDateTime(v.asOf)}`:`Valore manuale al ${fmtDate(v.asOf)}`):'Solo versamenti confermati, non è una valutazione di mercato';
+   $('hero-paid').textContent=euro(v?v.basis:invested);
+   $('hero-gain').textContent=v?(v.gain>=0?'+':'')+euro(v.gain)+(v.basis>0?' · '+pct(100*v.gain/v.basis):''):'Non disponibile';
+   $('hero-gain').className=v&&v.gain<0?'val-negative':'';
+   $('hero-status').textContent=v?(v.mode==='quote'?(v.stale?'Attenzione: prezzo di Borsa non recente. ':'')+`Patrimonio = ${nfmt(holdings())} quote × ${euro(state.quote.price)}. Rendimento semplice, non annualizzato.`:'Rendimento da valore manuale, non annualizzato.'):`Per calcolare il valore automaticamente servono le quote di ogni acquisto e una quotazione in euro.${missingUnits().length?' Mancano le quote di '+missingUnits().length+' movimenti.':''}`;
+   let q=state.quote,box=$('quote-home');box.innerHTML=q&&q.symbol===state.priceSymbol?`<div class="row"><div><div class="eyebrow">Prezzo ETF · ${clean(q.symbol)}</div><strong style="font-size:22px">${euro(q.price)} / quota</strong><p class="help">${clean(q.source==='manual'?'Inserito manualmente': 'Dato di Borsa non ufficiale, potenzialmente ritardato')} · ${clean(fmtDateTime(q.at))}</p></div><button class="btn small alt" type="button" id="quick-quote">${state.quoteMode==='manual'?'Impostazioni':'Aggiorna'}</button></div>`:`<div class="row"><div><strong>Prezzo ETF non disponibile</strong><p class="help">Collegamento gratuito a dati di mercato; alternativa manuale in Impostazioni.</p></div><button class="btn small alt" id="quick-quote">Riprova</button></div>`;
+   $('quick-quote')?.addEventListener('click',()=>state.quoteMode==='manual'?show('settings'):refreshQuote(true));
+   const next=nextDue(),overdue=dueMonths();$('next-card').innerHTML=next?`<div class="row"><div><div class="eyebrow">${next.pending?'Da confermare':'Prossima scadenza'}</div><h3 style="font-size:21px;margin:7px 0">${clean(fmtDate(next.date))}</h3><div class="muted">Acquisto programmato · ${euro(next.amount)}</div></div><span class="pill ${next.pending?'warn':''}">${next.pending?'Da verificare':'Pianificato'}</span></div><button type="button" class="btn ${next.pending?'':'alt'}" id="next-action">${next.pending?'Controlla il versamento':'Vedi i movimenti'}</button>${overdue.length>1?`<div class="muted">Hai ${overdue.length} scadenze non confermate.</div>`:''}`:'<div class="muted">Nessuna scadenza attiva.</div>';
+   $('next-action')?.addEventListener('click',()=>show('movements'));
+   $('summary-monthly').textContent=euro(next?.amount||amountAt(today().slice(0,7)));$('summary-units').textContent=nfmt(holdings());drawChart();
+ }
+ function drawChart(){let tx=[...state.movements].sort((a,b)=>a.date.localeCompare(b.date));$('chart-number').textContent=tx.length===1?'1 acquisto':`${tx.length} acquisti`;
+   let svg=$('chart');if(!tx.length){svg.innerHTML='<text x="300" y="105" text-anchor="middle" fill="#718582" font-size="16">Il grafico apparirà al primo acquisto</text>';$('chart-start').textContent='Inizio';$('chart-end').textContent='Oggi';return}
+   let cumulative=0,points=[{date:state.startMonth+'-01',value:0}];tx.forEach(x=>{cumulative+=x.amount;points.push({date:x.date,value:cumulative})});let max=Math.max(cumulative,1),last=points.length-1,coords=points.map((p,i)=>[24+(i/last)*552,186-p.value/max*152]);let line=coords.map((p,i)=>(i?'L':'M')+p.map(n=>n.toFixed(1)).join(' ')).join(' '),path=line+` L ${coords.at(-1)[0]} 186 L 24 186 Z`;svg.innerHTML=[0,1,2,3].map(i=>`<line class="gridline" x1="20" x2="580" y1="${34+i*51}" y2="${34+i*51}"/>`).join('')+`<path class="area" d="${path}"/><path class="stroke" d="${line}"/><circle cx="${coords.at(-1)[0]}" cy="${coords.at(-1)[1]}" r="5" fill="#237f67"/>`;$('chart-start').textContent=fmtDate(points[0].date);$('chart-end').textContent=fmtDate(tx.at(-1).date)
+ }
+ function renderMovements(){let due=dueMonths();$('pending-list').innerHTML=due.length?due.map(x=>`<div class="panel due"><div class="row"><div><h3>${clean(fmtDate(x.date))}</h3><p class="muted" style="margin:6px 0">Previsti: ${euro(x.amount)}</p></div><span class="pill warn">Da verificare</span></div><div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn small" data-confirm="${x.month}">Registra acquisto</button><button class="btn small line" data-skip="${x.month}">Saltato</button></div></div>`).join(''):'<div class="panel"><div class="muted">Nessuna scadenza da verificare.</div></div>';
+   document.querySelectorAll('[data-confirm]').forEach(btn=>btn.onclick=()=>{let month=btn.dataset.confirm;populateTx({date:plannedDate(month),amount:amountAt(month),month,units:null})});
+   document.querySelectorAll('[data-skip]').forEach(btn=>btn.onclick=()=>{if(confirm('Segnare questa scadenza come non eseguita?')){state.skipped.push(btn.dataset.skip);save()}});
+   let tx=[...state.movements].sort((a,b)=>b.date.localeCompare(a.date));$('history').innerHTML=tx.length?tx.map(x=>`<div class="list-line"><div><strong>${clean(fmtDate(x.date))}</strong><div class="muted">${x.month?'PAC del '+clean(x.month):'Acquisto aggiuntivo'}</div><div class="muted">${x.units?`${nfmt(x.units)} quote`:'Quote mancanti: prezzo automatico non calcolabile'}</div></div><div style="text-align:right;min-width:112px"><strong>${euro(x.amount)}</strong><div style="display:flex;gap:9px;justify-content:flex-end;margin-top:4px"><button class="linkish" style="font-size:12px" data-edit="${clean(x.id)}">Modifica</button><button class="linkish" style="font-size:12px;color:var(--danger)" data-remove="${clean(x.id)}">Elimina</button></div></div></div>`).join(''):'<div class="empty">Non hai ancora registrato acquisti.</div>';
+   document.querySelectorAll('[data-edit]').forEach(btn=>btn.onclick=()=>{let tx=state.movements.find(x=>x.id===btn.dataset.edit);if(tx)populateTx(tx)});
+   document.querySelectorAll('[data-remove]').forEach(btn=>btn.onclick=()=>{if(confirm('Eliminare questo acquisto?')){state.movements=state.movements.filter(x=>x.id!==btn.dataset.remove);clearTxForm();save()}})
+ }
+ const futureValue=(monthly,months,annualPct)=>{let r=Math.pow(1+annualPct/100,1/12)-1;return r===0?monthly*months:monthly*(Math.pow(1+r,months)-1)/r};
+ function renderFuture(){let r=Number($('rate').value),m=amountAt(nextDue()?.month||today().slice(0,7)),years=state.horizonYears,value=futureValue(m,years*12,r);$('future-title').textContent=`Proiezione: ${years} anni · ${state.name}`;$('future-total').textContent=euro(value);$('future-help').textContent=`Simulazione di ${years*12} versamenti futuri da ${euro(m)}, ipotizzando il ${r}% annuo. Non include gli acquisti già effettuati.`;const marks=[...new Set([1,3,5,10,15,18,20,25,30,40,50,years].filter(y=>y<=years))].sort((a,b)=>a-b);$('milestones').innerHTML=marks.map(y=>`<div class="futurerow"><div><strong>${y} ${y===1?'anno':'anni'}</strong><small>${euro(m*12*y)} versati</small></div><strong>${euro(futureValue(m,12*y,r))}</strong></div>`).join('')}
+ function renderSettings(){
+   $('etf-settings-title').textContent='ETF · '+state.name; $('etf-ticker').value=state.etfTicker;$('etf-isin').value=state.etfIsin||'';$('price-symbol').value=state.priceSymbol||'';
+   $('setting-horizon').value=state.horizonYears; $('setting-monthly').value=state.monthly;$('setting-day').value=String(state.day);$('setting-start').value=state.startMonth;
+   let next=nextDue(),month=next?.month||today().slice(0,7);if(!$('setting-effective').dataset.preserve)$('setting-effective').value=month;
+   $('monthly-history').innerHTML=state.amountChanges.map(x=>`<div class="futurerow"><span>Dal ${clean(x.from)}</span><strong>${euro(x.amount)}/mese</strong></div>`).join('');
+   let q=state.quote;$('quote-mode').value=state.quoteMode;$('manual-price').value=q?.source==='manual'?q.price:'';$('manual-price-date').value=q?.source==='manual'&&q.at?String(q.at).slice(0,10):today();
+   $('price-summary').textContent=q?`${euro(q.price)} / quota · ${q.source==='manual'?'manuale':'fonte non ufficiale'} · ${fmtDateTime(q.at)}`:'Nessun prezzo salvato';$('quote-feedback').textContent=quoteFeedback;
+   let v=state.valuation;$('market-value').value=v?.amount??'';$('market-date').value=v?.date||today();
+ }
+ function render(){renderPortfolios();renderHome();renderMovements();renderFuture();renderSettings()}
+ function show(name){document.querySelectorAll('.page').forEach(el=>el.classList.toggle('hidden',el.id!==`page-${name}`));document.querySelectorAll('.tab').forEach(el=>el.setAttribute('aria-selected',el.dataset.page===name?'true':'false'));window.scrollTo(0,0)}
+ async function refreshQuote(force=false,target=state){
+   if(target.quoteMode==='manual'){if(target===state){quoteFeedback='Prezzo manuale attivo: passa a modalità automatica per aggiornare.';render()}return}
+   if(!navigator.onLine){if(target===state){quoteFeedback='Sei offline: uso il prezzo salvato, se disponibile.';render()}return}
+   if(!force&&target.quote?.source==='yahoo'&&Date.now()-new Date(target.quote.at).getTime()<10*60000)return;
+   const symbol=target.priceSymbol;
+   if(target===state){quoteFeedback='Aggiornamento quotazione in corso…';render()}
+   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
+   try{
+     const yahoo=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1d&interval=1d`;
+     const response=await fetch('https://proxy.cors.dev/'+yahoo,{signal:controller.signal,credentials:'omit',cache:'no-store'});
+     if(!response.ok)throw Error('HTTP '+response.status);
+     const json=await response.json(),meta=json?.chart?.result?.[0]?.meta;
+     const price=Number(meta?.regularMarketPrice),currency=meta?.currency;
+     if(!(Number.isFinite(price)&&price>0))throw Error('Prezzo non disponibile');
+     if(currency!=='EUR')throw Error('Valuta ricevuta: '+String(currency||'sconosciuta')+'. Imposta un listino in EUR.');
+     if(target.priceSymbol!==symbol||!store.plans.includes(target))return;
+     const time=Number(meta?.regularMarketTime)>0?new Date(meta.regularMarketTime*1000).toISOString():new Date().toISOString();
+     target.quote={symbol,price,currency:'EUR',at:time,source:'yahoo',updatedAt:new Date().toISOString()};
+     if(target===state)quoteFeedback='Prezzo aggiornato (fonte non ufficiale, eventualmente ritardata).';
+     save();
+   }catch(e){if(target===state){quoteFeedback='Aggiornamento non riuscito ('+(e.name==='AbortError'?'timeout':e.message)+'). Riprova oppure inserisci il prezzo manualmente.';render()}}
+   finally{clearTimeout(timer)}
+ }
+ document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>show(btn.dataset.page)));
+ for(let i=1;i<=28;i++){ $('setting-day').add(new Option(String(i),String(i)));$('plan-day').add(new Option(String(i),String(i))) } $('plan-day').value='16';$('plan-start').value=today().slice(0,7);
+ $('add-form').onsubmit=e=>{e.preventDefault();try{addMovement($('tx-date').value,$('tx-amount').value,$('tx-units').value,$('tx-linked-month').value||null,$('tx-id').value||null)}catch(e){alertErr(e.message)}};
+ $('cancel-edit').onclick=clearTxForm;
+ $('etf-form').onsubmit=e=>{e.preventDefault();let ticker=$('etf-ticker').value.trim().toUpperCase(),isin=$('etf-isin').value.trim().toUpperCase(),symbol=$('price-symbol').value.trim().toUpperCase();if(!/^[A-Z0-9.-]{1,16}$/.test(ticker)||!(/^[A-Z]{2}[A-Z0-9]{10}$/.test(isin)||isin==='')||!/^[A-Z0-9.^-]{1,24}$/.test(symbol)){alert('Controlla ticker, ISIN e simbolo di mercato.');return}if(state.movements.length&&(ticker!==state.etfTicker||isin!==state.etfIsin)&&!confirm('Attenzione: hai già registrato quote di un altro ETF. Cambiare l’ETF NON converte lo storico. Vuoi continuare?'))return;state.etfTicker=ticker;state.etfIsin=isin;if(symbol!==state.priceSymbol)state.quote=null;state.priceSymbol=symbol;quoteFeedback='';save();setFeedback('ETF e mercato salvati.');if(state.quoteMode==='auto')refreshQuote(true)};
+ $('settings-form').onsubmit=e=>{e.preventDefault();let amount=Number($('setting-monthly').value),day=Number($('setting-day').value),start=$('setting-start').value,from=$('setting-effective').value,horizon=Number($('setting-horizon').value);if(!validMoney(amount)||!(day>=1&&day<=28)||!validMonth(start)||!validMonth(from)||from<start||from<today().slice(0,7)||!Number.isInteger(horizon)||horizon<1||horizon>50){alert('Controlla importo, giorno, orizzonte e mese di decorrenza. Non puoi cambiare le rate scadute.');return}if(start!==state.startMonth&&state.movements.length&&!confirm('Modificare la data iniziale potrebbe cambiare l’elenco delle scadenze, ma non i movimenti confermati. Continuare?'))return;state.monthly=round2(amount);state.day=day;state.startMonth=start;state.horizonYears=horizon;state.amountChanges=state.amountChanges.filter(x=>x.from!==from);state.amountChanges.push({from,amount:state.monthly});state.amountChanges.sort((a,b)=>a.from.localeCompare(b.from));if(state.amountChanges[0].from>start)state.amountChanges.unshift({from:start,amount:state.amountChanges[0].amount});$('setting-effective').dataset.preserve='';save();setFeedback(`PAC impostato a ${euro(amount)} dal ${from}. Lo storico rimane invariato.`)};
+ $('quote-mode').onchange=e=>{state.quoteMode=e.target.value;quoteFeedback=state.quoteMode==='manual'?'Inserisci il prezzo in euro per quota e salvalo.':'Modalità automatica attiva.';save();if(state.quoteMode==='auto')refreshQuote(true)};
+ $('manual-price-form').onsubmit=e=>{e.preventDefault();let p=Number($('manual-price').value),date=$('manual-price-date').value;if(!validMoney(p)||!validDate(date)||date>today()){alert('Prezzo e data non validi.');return}state.quoteMode='manual';state.quote={symbol:state.priceSymbol,price:p,currency:'EUR',at:date+'T17:00:00+01:00',source:'manual',updatedAt:new Date().toISOString()};quoteFeedback='Prezzo manuale salvato.';save()};
+ $('refresh-quote').onclick=()=>{state.quoteMode='auto';save();refreshQuote(true)};
+ $('valuation-form').onsubmit=e=>{e.preventDefault();let v=Number($('market-value').value),date=$('market-date').value;if($('market-value').value===''||!Number.isFinite(v)||v<0||!validDate(date)||date>today()){alert('Valore e data non validi.');return}state.valuation={amount:round2(v),date};save();setFeedback('Valore totale manuale salvato (usato se non è disponibile il calcolo dalle quote).')};
+ $('clear-valuation').onclick=()=>{if(confirm('Eliminare il valore totale manuale?')){state.valuation=null;save()}};
+ $('rate').onchange=renderFuture;
+ const download=(name,content,type)=>{let blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2500)};
+ $('export-data').onclick=()=>download('pac-famiglia-backup-'+today()+'.json',JSON.stringify({version:3,exportedAt:new Date().toISOString(),data:store},null,2),'application/json');
+ $('import-file').onchange=async e=>{let file=e.target.files[0];if(!file)return;try{
+    if(file.size>5000000)throw Error('File troppo grande.');
+    const obj=JSON.parse(await file.text()),d=obj.data;
+    if(d&&Array.isArray(d.owners)&&Array.isArray(d.plans)&&d.owners.length<=100&&d.plans.length<=100&&d.plans.every(p=>p&&Array.isArray(p.movements)&&p.movements.length<=10000)){
+      if(!confirm('Importare il backup e sostituire TUTTE le persone e i piani attuali? Esporta prima un backup.'))return;
+      store=d;normalise();quoteFeedback='';clearTxForm();save();show('portfolios');setFeedback('Backup multi-piano importato.');
+    }else if(d&&Array.isArray(d.movements)&&Array.isArray(d.skipped)&&validMoney(d.monthly)&&d.movements.length<=10000){
+      if(!confirm('È un vecchio backup di Ginevra. Aggiungerlo come nuovo piano senza cancellare gli altri?'))return;
+      let owner=store.owners.find(o=>o.name.toLowerCase()==='ginevra');
+      if(!owner){owner={id:uid(),name:'Ginevra'};store.owners.push(owner)}
+      const plan={...defaults(),...d,id:uid(),ownerId:owner.id,name:'PAC VWCE (importato)'};
+      store.plans.push(plan);normalise();save();show('portfolios');setFeedback('Vecchio backup importato come piano aggiuntivo.');
+    }else throw Error('File di backup non compatibile.');
+   }catch(err){alert(err.message||'Impossibile importare.')}finally{e.target.value=''}};
+ $('calendar-file').onclick=()=>{let[y,m]=state.startMonth.split('-').map(Number),date=`${y}${String(m).padStart(2,'0')}${String(state.day).padStart(2,'0')}`,dt=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');let owner=ownerOf(state)?.name||'Persona';let rows=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//PAC Famiglia//IT','CALSCALE:GREGORIAN','BEGIN:VEVENT',`UID:${state.id}@pac-famiglia.local`,`DTSTAMP:${dt}`,`DTSTART;VALUE=DATE:${date}`,`DTEND;VALUE=DATE:${isoDate(new Date(y,m-1,state.day+1)).replace(/-/g,'')}`,`RRULE:FREQ=MONTHLY;BYMONTHDAY=${state.day}`,`SUMMARY:Controlla ${owner} · ${state.name}`,'DESCRIPTION:Verifica l’acquisto su Trade Republic e registra importo e quote in PAC Famiglia.','END:VEVENT','END:VCALENDAR'];download('promemoria-'+state.etfTicker.toLowerCase()+'-'+state.id.slice(0,8)+'.ics',rows.join('\r\n'),'text/calendar;charset=utf-8')};
+ $('erase').onclick=()=>{if(confirm('Cancellare TUTTE le persone e tutti i piani? Esporta prima un backup.')){localStorage.removeItem(KEY);localStorage.removeItem(LEGACY_KEY);store=firstStore();normalise();quoteFeedback='';clearTxForm();save();show('portfolios')}};
+ $('owner-form').onsubmit=e=>{e.preventDefault();const name=$('owner-name').value.trim();if(!name||name.length>50){alert('Inserisci un nome da 1 a 50 caratteri.');return}const owner={id:uid(),name};store.owners.push(owner);$('owner-name').value='';save();$('plan-owner').value=owner.id;};
+ $('create-plan-form').onsubmit=e=>{e.preventDefault();const ownerId=$('plan-owner').value,name=$('plan-name').value.trim(),ticker=$('plan-ticker').value.trim().toUpperCase(),isin=$('plan-isin').value.trim().toUpperCase(),symbol=$('plan-symbol').value.trim().toUpperCase(),amount=Number($('plan-monthly').value),day=Number($('plan-day').value),start=$('plan-start').value,horizon=Number($('plan-horizon').value);
+   if(!store.owners.some(o=>o.id===ownerId)||!name||name.length>50||!/^[A-Z0-9.-]{1,16}$/.test(ticker)||(isin!==''&&!/^[A-Z]{2}[A-Z0-9]{10}$/.test(isin))||!/^[A-Z0-9.^-]{1,24}$/.test(symbol)||!validMoney(amount)||day<1||day>28||!validMonth(start)||!Number.isInteger(horizon)||horizon<1||horizon>50){alert('Controlla tutti i dati del nuovo piano.');return}
+   const plan=newPlan(ownerId,name,ticker,isin,symbol,round2(amount),day,start,horizon);store.plans.push(plan);$('create-plan-form').reset();$('plan-day').value='16';$('plan-start').value=today().slice(0,7);$('plan-monthly').value='100';$('plan-horizon').value='18';switchPlan(plan.id);
+ };
+ clearTxForm();render();
+ if(state.quoteMode==='auto')refreshQuote();
+  const installed=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const iphone=/iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  const installCard=$('install-card');
+  if(iphone && !installed && !sessionStorage.getItem('ginevra-hide-install')) installCard.hidden=false;
+  $('install-dismiss').onclick=()=>{installCard.hidden=true;sessionStorage.setItem('ginevra-hide-install','1')};
+  if('serviceWorker' in navigator && (location.protocol==='https:' || ['localhost','127.0.0.1'].includes(location.hostname))){
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  }
+})();
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "id": "./",
+  "name": "PAC Famiglia - Piani di accumulo",
+  "short_name": "PAC Famiglia",
+  "description": "Piani di accumulo separati per ciascuna persona, ETF, acquisti e rendimenti.",
+  "lang": "it-IT",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f7f2",
+  "theme_color": "#132a2b",
+  "categories": [
+    "finance",
+    "personalization"
+  ],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

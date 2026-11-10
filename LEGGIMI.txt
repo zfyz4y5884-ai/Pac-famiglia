@@ -1,0 +1,7 @@
+PAC FAMIGLIA 1.4 - APP PER IPHONE E IPAD
+
+Versione con più persone e più piani di accumulo.
+Apri INSTALLA_SU_IPHONE.md. Carica tutti i file sullo STESSO repository GitHub Pages se stai aggiornando Ginevra PAC.
+Prima di aggiornare esporta il backup dalla vecchia app.
+
+Le persone sono etichette virtuali, non conti bancari distinti. I dati restano locali sul dispositivo.
